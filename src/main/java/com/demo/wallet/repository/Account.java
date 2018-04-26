@@ -12,7 +12,7 @@ public class Account {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "email")
@@ -42,6 +42,14 @@ public class Account {
     }
 
     public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public Account() {
+    }
+
+    public Account(String email, BigDecimal balance) {
+        this.email = email;
         this.balance = balance;
     }
 

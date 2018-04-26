@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class TransactionHistory {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "debit_account")

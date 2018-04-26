@@ -2,11 +2,7 @@ package com.demo.wallet.service;
 
 import com.demo.wallet.App;
 import com.demo.wallet.controller.exception.AccountDuplicationException;
-import com.demo.wallet.controller.exception.AccountNotFoundException;
-import com.demo.wallet.controller.message.CheckBalanceReq;
-import com.demo.wallet.controller.message.CheckBalanceResp;
-import com.demo.wallet.controller.message.RegisterReq;
-import com.demo.wallet.controller.message.RegisterResp;
+import com.demo.wallet.controller.exception.AccountNotExistingException;
 import com.demo.wallet.repository.Account;
 import com.demo.wallet.repository.AccountRepository;
 import org.junit.Test;
@@ -82,7 +78,7 @@ public class AccountServiceTest {
             accountService.getBalance("@x.com");
             fail("Should throw Account Not Found Exception");
         } catch (Exception e) {
-            assertTrue(e instanceof AccountNotFoundException);
+            assertTrue(e instanceof AccountNotExistingException);
         }
     }
 

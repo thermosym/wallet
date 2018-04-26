@@ -1,11 +1,7 @@
 package com.demo.wallet.service;
 
 import com.demo.wallet.controller.exception.AccountDuplicationException;
-import com.demo.wallet.controller.exception.AccountNotFoundException;
-import com.demo.wallet.controller.message.CheckBalanceReq;
-import com.demo.wallet.controller.message.CheckBalanceResp;
-import com.demo.wallet.controller.message.RegisterReq;
-import com.demo.wallet.controller.message.RegisterResp;
+import com.demo.wallet.controller.exception.AccountNotExistingException;
 import com.demo.wallet.repository.Account;
 import com.demo.wallet.repository.AccountRepository;
 import org.slf4j.Logger;
@@ -45,11 +41,12 @@ public class AccountService {
         }
     }
 
-    public BigDecimal getBalance(String email) throws AccountNotFoundException {
+    public BigDecimal getBalance(String email) throws AccountNotExistingException {
         Account account = accountRepository.findByEmail(email);
         if (account == null) {
-            throw new AccountNotFoundException("Account " + email + " not found");
+            throw new AccountNotExistingException("Account " + email + " not found");
         }
         return account.getBalance();
     }
+
 }

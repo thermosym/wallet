@@ -14,6 +14,13 @@ public class BaseResp {
         this.success = success;
     }
 
+    public BaseResp() {
+    }
+
+    public BaseResp(boolean success) {
+        this.success = success;
+    }
+
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);

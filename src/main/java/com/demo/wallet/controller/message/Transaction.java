@@ -1,8 +1,12 @@
 package com.demo.wallet.controller.message;
 
 
+import com.demo.wallet.repository.TransactionHistory;
+import com.demo.wallet.util.TimeUtil;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.time.ZoneId;
 
 public class Transaction {
     private Long id;
@@ -58,6 +62,17 @@ public class Transaction {
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
+    }
+
+    public static Transaction fromTransactionHistory(TransactionHistory history) {
+        Transaction transaction = new Transaction();
+        transaction.id = history.getId();
+        transaction.from = history.getDebitAccount();
+        transaction.to = history.getCreditAccount();
+        transaction.type = history.getTransactionType();
+        transaction.amount = history.getAmount().doubleValue();
+        transaction.datetime = TimeUtil.dbTsToRFC3339(history.getExecutionTime(), ZoneId.of("GMT+8"));
+        return transaction;
     }
 
     @Override

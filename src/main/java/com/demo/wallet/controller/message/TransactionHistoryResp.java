@@ -1,19 +1,16 @@
 package com.demo.wallet.controller.message;
 
-
-import com.demo.wallet.repository.TransactionHistory;
-
 import java.util.List;
 
 public class TransactionHistoryResp extends BaseResp {
 
-    private List<TransactionHistory> transactions;
+    private List<Transaction> transactions;
 
-    public List<TransactionHistory> getTransactions() {
+    public List<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<TransactionHistory> transactions) {
+    public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
@@ -21,7 +18,7 @@ public class TransactionHistoryResp extends BaseResp {
         this.success = true;
     }
 
-    public TransactionHistoryResp(List<TransactionHistory> transactions) {
+    public TransactionHistoryResp(List<Transaction> transactions) {
         this.success = true;
         this.transactions = transactions;
     }
