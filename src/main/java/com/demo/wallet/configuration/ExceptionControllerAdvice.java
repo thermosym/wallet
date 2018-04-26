@@ -1,5 +1,6 @@
 package com.demo.wallet.configuration;
 
+import com.demo.wallet.controller.exception.RequestValidationException;
 import com.demo.wallet.controller.message.ErrorResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ExceptionControllerAdvice.class);
+
+    @Order(1)
+    @ExceptionHandler(RequestValidationException.class)
+    public ResponseEntity<ErrorResp> validationExceptionHandler(Exception e) {
+        log.error("Validation Failure", e);
+        return ResponseEntity.badRequest().body(new ErrorResp(e.getMessage()));
+    }
 
     @Order(Ordered.LOWEST_PRECEDENCE)
     @ExceptionHandler(Exception.class)

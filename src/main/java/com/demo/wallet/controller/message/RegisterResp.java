@@ -12,6 +12,7 @@ public class RegisterResp extends BaseResp {
     }
 
     public RegisterResp() {
+        this.success = true;
     }
 
     public RegisterResp(double balance) {

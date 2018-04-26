@@ -11,7 +11,9 @@ public class CheckBalanceResp extends BaseResp {
         this.balance = balance;
     }
 
-    public CheckBalanceResp() {}
+    public CheckBalanceResp() {
+        this.success = true;
+    }
 
     public CheckBalanceResp(double balance) {
         this.success = true;

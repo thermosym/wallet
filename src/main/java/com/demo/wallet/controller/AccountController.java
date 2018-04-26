@@ -1,7 +1,13 @@
 package com.demo.wallet.controller;
 
+import com.demo.wallet.controller.message.BaseResp;
+import com.demo.wallet.controller.message.ErrorResp;
 import com.demo.wallet.controller.message.RegisterReq;
+import com.demo.wallet.controller.exception.AccountDuplicationException;
 import com.demo.wallet.controller.message.RegisterResp;
+import com.demo.wallet.repository.Account;
+import com.demo.wallet.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,8 +18,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @RestController
 public class AccountController {
 
+    @Autowired
+    private AccountService accountService;
+
     @RequestMapping(value = "/account", method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public RegisterResp registerAccount(@RequestBody RegisterReq req) {
-        return null;
+    public BaseResp registerAccount(@RequestBody RegisterReq req) {
+        req.validate();
+        try {
+            Account account = accountService.registerNewAccount(req.getEmail());
+            return new RegisterResp(account.getBalance().doubleValue());
+        } catch (AccountDuplicationException e) {
+            return new ErrorResp(e.getMessage());
+        }
     }
 }

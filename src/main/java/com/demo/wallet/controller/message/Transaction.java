@@ -1,4 +1,4 @@
-package com.demo.wallet.repository;
+package com.demo.wallet.controller.message;
 
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

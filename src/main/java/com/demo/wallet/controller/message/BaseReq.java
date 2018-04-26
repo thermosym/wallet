@@ -1,9 +1,11 @@
 package com.demo.wallet.controller.message;
 
+import com.demo.wallet.controller.exception.RequestValidationException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class BaseReq {
+public class BaseReq implements Validation {
 
     protected String email;
 
@@ -13,6 +15,13 @@ public class BaseReq {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public void validate() {
+        if (StringUtils.isBlank(email)) {
+            throw new RequestValidationException("email should not be blank");
+        }
     }
 
     @Override
