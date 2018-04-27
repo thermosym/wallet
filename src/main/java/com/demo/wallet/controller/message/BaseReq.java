@@ -20,7 +20,7 @@ public class BaseReq implements Validation {
     @Override
     public void validate() {
         if (StringUtils.isBlank(email)) {
-            throw new RequestValidationException("email should not be blank");
+            throw new RequestValidationException("Email should not be blank");
         }
     }
 
