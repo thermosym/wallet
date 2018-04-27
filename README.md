@@ -173,4 +173,4 @@ $./gradlew clean build
 
 ## Database Schema Setup
 
-use 'db-schema.sql' to setup mysql DB schema
+use 'schema.sql' to setup mysql DB schema
