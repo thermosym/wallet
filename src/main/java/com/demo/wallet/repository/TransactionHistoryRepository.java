@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
 
-    List<TransactionHistory> findByDebitAccountAndCreditStatus(String debitAccount, TransactionStatus creditStatus);
+    List<TransactionHistory> findByDebitAccountAndDebitStatusAndCreditStatus(String debitAccount, TransactionStatus debitStatus, TransactionStatus creditStatus);
 
 }

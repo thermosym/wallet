@@ -12,6 +12,9 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+
+import static com.demo.wallet.util.ThreadUtil.newBoundedFixedThreadPool;
 
 @Service
 public class TransferService {
@@ -26,6 +29,11 @@ public class TransferService {
 
     @Autowired
     private TransactionHistoryRepository transactionHistoryRepository;
+
+    @Autowired
+    private CreditTransactionProcessor creditTransactionProcessor;
+
+    private ExecutorService es = newBoundedFixedThreadPool(2, 10);
 
     @Transactional(rollbackOn = Throwable.class)
     public void processBalanceTransfer(String debitAccountEmail, String creditAccountEmail, BigDecimal amount)
@@ -45,10 +53,11 @@ public class TransferService {
         if (!deducted) {
             throw new BalanceInsufficientException("Account " + debitAccountEmail + " balance insufficient");
         }
-        boolean added = transactionManagement.addBalance(creditAccountEmail, amount);
-        if (!added) {
-            throw new AccountNotExistingException("Transferee " + creditAccountEmail + " not found");
-        }
+
+//        boolean added = transactionManagement.addBalance(creditAccountEmail, amount);
+//        if (!added) {
+//            throw new AccountNotExistingException("Transferee " + creditAccountEmail + " not found");
+//        }
 
         TransactionHistory transactionHistory = new TransactionHistory();
         transactionHistory.setAmount(amount);
@@ -57,9 +66,16 @@ public class TransferService {
         transactionHistory.setTransactionType(TRANSFER_TYPE);
         transactionHistory.setExecutionTime(new Timestamp(System.currentTimeMillis()));
         transactionHistory.setDebitStatus(TransactionStatus.PROCESSED);
-        transactionHistory.setCreditStatus(TransactionStatus.PROCESSED);
+        transactionHistory.setCreditStatus(TransactionStatus.NEW);
 
-        transactionHistoryRepository.save(transactionHistory);
+        TransactionHistory savedTransactionHistory = transactionHistoryRepository.save(transactionHistory);
+        es.submit(() -> {
+            try {
+                creditTransactionProcessor.processCreditStep(savedTransactionHistory);
+            } catch (Exception e) {
+                log.error("Error on processing credit step", e);
+            }
+        });
     }
 
     public List<TransactionHistory> getTransactionHistory(String email) throws AccountNotExistingException {
@@ -67,7 +83,7 @@ public class TransferService {
             throw new AccountNotExistingException("Account " + email + " not found");
         }
 
-        List<TransactionHistory> history = transactionHistoryRepository.findByDebitAccountAndCreditStatus(email, TransactionStatus.PROCESSED);
+        List<TransactionHistory> history = transactionHistoryRepository.findByDebitAccountAndDebitStatusAndCreditStatus(email, TransactionStatus.PROCESSED, TransactionStatus.PROCESSED);
         return history;
     }
 }
